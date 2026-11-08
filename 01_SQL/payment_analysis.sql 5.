@@ -1,0 +1,313 @@
+SELECT *
+FROM payments.upi_transactions
+LIMIT 10;
+
+SELECT COUNT(*) AS total_transactions
+FROM payments.upi_transactions;
+
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_schema = 'payments'
+AND table_name = 'upi_transactions'
+ORDER BY ordinal_position;
+
+SELECT
+    COUNT(*) AS total_rows,
+    COUNT("TransactionID") AS transaction_ids,
+    COUNT("TransactionDate") AS transaction_dates,
+    COUNT("Amount") AS transaction_amounts,
+    COUNT("Status") AS transaction_statuses,
+    COUNT("BankNameSent") AS sender_banks,
+    COUNT("BankNameReceived") AS receiver_banks,
+    COUNT("City") AS cities,
+    COUNT("TransactionType") AS transaction_types
+FROM payments.upi_transactions;
+
+SELECT column_name
+FROM information_schema.columns
+WHERE table_schema = 'payments'
+AND table_name = 'upi_transactions'
+ORDER BY ordinal_position;
+
+
+SELECT
+    "TransactionID",
+    COUNT(*) AS occurrences
+FROM payments.upi_transactions
+GROUP BY "TransactionID"
+HAVING COUNT(*) > 1
+ORDER BY occurrences DESC;
+
+SELECT
+    "Status",
+    COUNT(*) AS transaction_count
+FROM payments.upi_transactions
+GROUP BY "Status"
+ORDER BY transaction_count DESC;
+
+SELECT
+    COUNT(*) AS total_transactions,
+    ROUND(SUM("Amount")::numeric, 2) AS total_transaction_value,
+    ROUND(AVG("Amount")::numeric, 2) AS average_transaction_value,
+    ROUND(MIN("Amount")::numeric, 2) AS smallest_transaction,
+    ROUND(MAX("Amount")::numeric, 2) AS largest_transaction
+FROM payments.upi_transactions;
+
+SELECT
+    "Status",
+    COUNT(*) AS transaction_count,
+    ROUND(SUM("Amount")::numeric, 2) AS total_value,
+    ROUND(AVG("Amount")::numeric, 2) AS average_value
+FROM payments.upi_transactions
+GROUP BY "Status"
+ORDER BY total_value DESC;
+
+SELECT
+    "PaymentMethod",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Success' THEN 1
+        ELSE 0
+    END) AS successful_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "PaymentMethod"
+ORDER BY failure_rate DESC;
+
+SELECT
+    "BankNameSent",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "BankNameSent"
+ORDER BY failure_rate DESC;
+
+SELECT
+    "BankNameReceived",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "BankNameReceived"
+ORDER BY failure_rate DESC;
+
+SELECT
+    "City",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "City"
+ORDER BY failure_rate DESC;
+
+SELECT
+    DATE_TRUNC('month', "TransactionDate") AS transaction_month,
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY DATE_TRUNC('month', "TransactionDate")
+ORDER BY transaction_month;
+
+SELECT
+    "TransactionDate"
+FROM payments.upi_transactions
+LIMIT 10;
+
+SELECT
+    "TransactionDate",
+    TO_DATE("TransactionDate", 'DD/MM/YYYY') AS converted_date
+FROM payments.upi_transactions
+LIMIT 10;
+
+SELECT
+    DATE_TRUNC(
+        'month',
+        TO_DATE("TransactionDate", 'DD/MM/YYYY')
+    ) AS transaction_month,
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY DATE_TRUNC(
+    'month',
+    TO_DATE("TransactionDate", 'DD/MM/YYYY')
+)
+ORDER BY transaction_month;
+
+SELECT
+    "TransactionType",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "TransactionType"
+ORDER BY failure_rate DESC;
+
+SELECT
+    column_name,
+    data_type
+FROM information_schema.columns
+WHERE table_schema = 'payments'
+AND table_name = 'upi_transactions'
+ORDER BY ordinal_position;
+
+SELECT
+    "DeviceType",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "DeviceType"
+ORDER BY failure_rate DESC;
+
+SELECT
+    "TransactionTime"
+FROM payments.upi_transactions
+LIMIT 15;
+
+SELECT
+    MIN("TransactionTime") AS earliest_value,
+    MAX("TransactionTime") AS latest_value,
+    COUNT(DISTINCT "TransactionTime") AS unique_time_values
+FROM payments.upi_transactions;
+
+SELECT
+    "TransactionTime",
+    COUNT(*) AS occurrences
+FROM payments.upi_transactions
+GROUP BY "TransactionTime"
+ORDER BY occurrences DESC
+LIMIT 20;
+
+SELECT
+    MIN(SPLIT_PART("TransactionTime", ':', 1)::integer) AS minimum_first_part,
+    MAX(SPLIT_PART("TransactionTime", ':', 1)::integer) AS maximum_first_part,
+    MIN(SPLIT_PART("TransactionTime", ':', 2)::numeric) AS minimum_second_part,
+    MAX(SPLIT_PART("TransactionTime", ':', 2)::numeric) AS maximum_second_part,
+    COUNT(*) AS total_records
+FROM payments.upi_transactions;
+
+SELECT
+    "Status",
+    MIN("TransactionTime") AS minimum_value,
+    MAX("TransactionTime") AS maximum_value,
+    COUNT(*) AS transaction_count
+FROM payments.upi_transactions
+GROUP BY "Status";
+
+sELECT
+    "Status",
+    ROUND(AVG(
+        SPLIT_PART("TransactionTime", ':', 1)::numeric
+    ), 2) AS average_first_part,
+    ROUND(AVG(
+        SPLIT_PART("TransactionTime", ':', 2)::numeric
+    ), 2) AS average_second_part,
+    COUNT(*) AS total_transactions
+FROM payments.upi_transactions
+GROUP BY "Status";
+
+SELECT
+    "MerchantName",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "MerchantName"
+ORDER BY failure_rate DESC;
+
+SELECT
+    "MerchantName",
+    "Status",
+    COUNT(*) AS transaction_count
+FROM payments.upi_transactions
+GROUP BY
+    "MerchantName",
+    "Status"
+ORDER BY
+    "MerchantName",
+    "Status";
+
+SELECT
+    "Purpose",
+    COUNT(*) AS total_transactions,
+    SUM(CASE
+        WHEN "Status" = 'Failed' THEN 1
+        ELSE 0
+    END) AS failed_transactions,
+    ROUND(
+        SUM(CASE WHEN "Status" = 'Failed' THEN 1 ELSE 0 END)::numeric
+        / COUNT(*) * 100, 2
+    ) AS failure_rate
+FROM payments.upi_transactions
+GROUP BY "Purpose"
+ORDER BY failure_rate DESC;
+
+SELECT
+    "MerchantName",
+    "Purpose",
+    COUNT(*) AS transaction_count
+FROM payments.upi_transactions
+GROUP BY
+    "MerchantName",
+    "Purpose"
+ORDER BY
+    "MerchantName",
+    "Purpose";

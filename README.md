@@ -1,6 +1,15 @@
 # digital-payments-performance-analysis
 A fintech payments analysis project using PostgreSQL, Power BI and Jira to investigate transaction performance and payment failures.
 # Digital Payments Performance & Failure Analysis
+## My Learning Journey
+
+This is one of my first projects exploring data analysis and business intelligence within the fintech sector.
+
+My background is in accounting and finance, so I wanted to build on my existing experience by learning how tools such as SQL, Power BI and Jira can be used to investigate business problems and support decision-making.
+
+I'm still developing my technical skills and there is plenty more for me to learn. This project gave me the opportunity to put some of those skills into practice, work through a business scenario independently and understand how data analysis can support a payments operation.
+
+I'm keen to continue building on this experience and develop further within a fintech or financial services environment.
 
 ## About the Project
 
